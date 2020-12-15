@@ -14,6 +14,9 @@ def readData(addr):
 def g(z): # Sigmoid
     return 1.0 / ( 1 + e**(-z))
 
+def sm(z): # Softmax
+    return (np.exp(z.T.astype(float)) / np.sum(np.exp(z.astype(float)), axis=1)).T
+
 def one_vs_one(_x, _y, alpha, iterations, nclass):
     mul = np.matmul
     all_theta=[]
@@ -86,6 +89,23 @@ def accuracy_one_vs_all(_x, _y, all_theta, nclass):
         _yp[i] = c
     return (_yp==_y).astype(float).sum()/len(_y)
 
+def softmaxReg(_x, _y, alpha, iterations, nclass):
+    mul = np.matmul
+    all_theta=[]
+    _nx = np.insert(_x, 0, 1, axis=1)
+    _y = _y.T[0]
+    _ny = (np.arange(np.max(_y) + 1) == _y[:, None]).astype(float)
+    print(_ny)
+    for i in range(nclass):
+        # _ny[_y[:, 0]!=i], _ny[_y[:, 0]==i] = 0, 1
+        _theta = np.zeros((len(_nx[0]), 1))
+        # for _ in range(iterations):
+        _h = sm(mul(_nx, _theta))
+        # print(_h)
+    #         _theta = _theta - (alpha/len(_nx)) * mul( (_h-_ny).transpose(), _nx).transpose()
+    #     all_theta += [_theta]
+    # return all_theta
+
 # ------------------------------ Read Datas ------------------------------
 _data = readData('Datas/iris.data')
 
@@ -134,6 +154,13 @@ print("test accuracy for one-vs-all logistic regression:")
 print(accuracy_one_vs_all(_xt, _yt, all_theta, nclass))
 print()
 
+# ------------------------------ Softmax LR -----------------------------
+
+iterations = 2000
+alpha = 0.01
+nclass = 3
+softmaxReg(_x, _y, alpha, iterations, nclass)
+
 # -------------------------------- Plots --------------------------------
 plt.figure(1)
 
@@ -145,4 +172,4 @@ for i in range(nclass):
     plt.xlabel('Iterations')
     plt.legend()
 
-plt.show()
+# plt.show()
