@@ -91,20 +91,29 @@ def accuracy_one_vs_all(_x, _y, all_theta, nclass):
 
 def softmaxReg(_x, _y, alpha, iterations, nclass):
     mul = np.matmul
-    all_theta=[]
     _nx = np.insert(_x, 0, 1, axis=1)
     _y = _y.T[0]
     _ny = (np.arange(np.max(_y) + 1) == _y[:, None]).astype(float)
-    print(_ny)
-    for i in range(nclass):
-        # _ny[_y[:, 0]!=i], _ny[_y[:, 0]==i] = 0, 1
-        _theta = np.zeros((len(_nx[0]), 1))
-        # for _ in range(iterations):
+    _theta = np.zeros((len(_nx[0]), nclass))
+    for _ in range(iterations):
         _h = sm(mul(_nx, _theta))
-        # print(_h)
-    #         _theta = _theta - (alpha/len(_nx)) * mul( (_h-_ny).transpose(), _nx).transpose()
-    #     all_theta += [_theta]
-    # return all_theta
+        _theta = _theta - (alpha/len(_nx)) * mul( (_h-_ny).transpose(), _nx).transpose()
+    return _theta
+
+def accuracy_softmax(_x, _y, _theta, nclass):
+    mul = np.matmul
+    _nx = np.insert(_x, 0, 1, axis=1)
+    _yp = _y.copy()
+    _ny = _y.T[0]
+    _ny = (np.arange(np.max(_ny) + 1) == _ny[:, None]).astype(float)
+    _h = sm(mul(_nx, _theta))
+    for i in range(len(_h)):
+        m=0
+        for j in range(len(_h[i])):
+            if(_h[i][m]<_h[i][j]):
+                m = j
+        _yp[i] = m
+    return (_yp==_y).astype(float).sum()/len(_y)
 
 # ------------------------------ Read Datas ------------------------------
 _data = readData('Datas/iris.data')
@@ -128,38 +137,38 @@ _xt = np.concatenate((_data0[m0:][:, 0:4], _data1[m1:][:, 0:4], _data2[m2:][:, 0
 _yt = np.concatenate((np.zeros((mt0, 1)), np.ones((mt1, 1)), 2*np.ones((mt2, 1))))
 _1xt = np.insert(_xt, 0, np.ones(mt0+mt1+mt2), axis=1)
 
-# ---------------------------- one-vs-one LR ----------------------------
+# --------------------------- Initialization ----------------------------
 
-iterations = 2000
+iterations = 1000
 alpha = 0.01
 nclass = 3
+
+# ---------------------------- one-vs-one LR ----------------------------
+
 all_theta = one_vs_one(_x, _y, alpha, iterations, nclass)
 print("train accuracy for one-vs-one logistic regression:")
 print(accuracy_one_vs_one(_x, _y, all_theta, nclass))
-print()
 print("test accuracy for one-vs-one logistic regression:")
 print(accuracy_one_vs_one(_xt, _yt, all_theta, nclass))
 print()
 
 # ---------------------------- one-vs-all LR ----------------------------
 
-iterations = 2000
-alpha = 0.01
-nclass = 3
 all_theta, J = one_vs_all(_x, _y, alpha, iterations, nclass)
 print("train accuracy for one-vs-all logistic regression:")
 print(accuracy_one_vs_all(_x, _y, all_theta, nclass))
-print()
 print("test accuracy for one-vs-all logistic regression:")
 print(accuracy_one_vs_all(_xt, _yt, all_theta, nclass))
 print()
 
 # ------------------------------ Softmax LR -----------------------------
 
-iterations = 2000
-alpha = 0.01
-nclass = 3
-softmaxReg(_x, _y, alpha, iterations, nclass)
+_theta = softmaxReg(_x, _y, alpha, iterations, nclass)
+print("train accuracy for softmax logistic regression:")
+print(accuracy_softmax(_x, _y, _theta, nclass))
+print("test accuracy for softmax logistic regression:")
+print(accuracy_softmax(_xt, _yt, _theta, nclass))
+print()
 
 # -------------------------------- Plots --------------------------------
 plt.figure(1)
@@ -172,4 +181,4 @@ for i in range(nclass):
     plt.xlabel('Iterations')
     plt.legend()
 
-# plt.show()
+plt.show()
