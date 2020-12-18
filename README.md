@@ -43,9 +43,7 @@ test accuracy for one-vs-all logistic regression:
 ```
 
 * Plot of cost function for one-vs-all method:
-```
-img
-```
+![f1](https://github.com/VakhshooriEhsan/SPR-Fall2020-HW2-Logistic-SoftmaxRegression-MC--BayesianClassification/blob/master/docs/imgs/Figure_1.png?raw=true)
 
 ### 3. Train multiclass classification by softmax regression:
 
@@ -82,12 +80,11 @@ test_dataset_2 accuracy for Bayesian classification:
 ```
 
 * Plot of the decision boundary and classification results:
-```
-img
-```
+![f1](https://github.com/VakhshooriEhsan/SPR-Fall2020-HW2-Logistic-SoftmaxRegression-MC--BayesianClassification/blob/master/docs/imgs/Figure_2.png?raw=true)
+
 
 * Plot of estimate:
-```
-img
-```
-
+![f1](https://github.com/VakhshooriEhsan/SPR-Fall2020-HW2-Logistic-SoftmaxRegression-MC--BayesianClassification/blob/master/docs/imgs/Figure_3.png?raw=true)
+![f1](https://github.com/VakhshooriEhsan/SPR-Fall2020-HW2-Logistic-SoftmaxRegression-MC--BayesianClassification/blob/master/docs/imgs/Figure_4.png?raw=true)
+![f1](https://github.com/VakhshooriEhsan/SPR-Fall2020-HW2-Logistic-SoftmaxRegression-MC--BayesianClassification/blob/master/docs/imgs/Figure_5.png?raw=true)
+![f1](https://github.com/VakhshooriEhsan/SPR-Fall2020-HW2-Logistic-SoftmaxRegression-MC--BayesianClassification/blob/master/docs/imgs/Figure_6.png?raw=true)
